@@ -3,13 +3,24 @@
 :root {
   --background: hsl(0, 0%, 2%);
   --foreground: hsl(0, 0%, 98%);
+  --text-body: hsl(0, 0%, 88%);
+  --text-muted: hsl(0, 0%, 55%);
   --card-bg: rgba(15, 15, 15, 0.65);
   --border-color: rgba(220, 38, 38, 0.15);
 }
 
+.light-theme {
+  --background: hsl(220, 20%, 95%);
+  --foreground: hsl(220, 30%, 10%);
+  --text-body: hsl(220, 20%, 20%);
+  --text-muted: hsl(220, 15%, 45%);
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --border-color: rgba(220, 38, 38, 0.12);
+}
+
 @theme {
-  --color-midnight-obsidian: hsl(0, 0%, 2%);
-  --color-glass-layer: rgba(15, 15, 15, 0.65);
+  --color-midnight-obsidian: var(--background);
+  --color-glass-layer: var(--card-bg);
   --color-velvet-rose: hsl(0, 72%, 51%); /* Crimson Red */
   --color-saffron-radiance: hsl(38, 92%, 54%);
   --color-green-oasis: hsl(162, 76%, 36%);
@@ -18,9 +29,9 @@
   --color-brand-secondary: var(--color-saffron-radiance);
   --color-brand-emerald: var(--color-green-oasis);
   
-  --color-text-title: hsl(0, 0%, 98%);
-  --color-text-body: hsl(0, 0%, 88%);
-  --color-text-muted: hsl(0, 0%, 55%);
+  --color-text-title: var(--foreground);
+  --color-text-body: var(--text-body);
+  --color-text-muted: var(--text-muted);
   
   --font-display: var(--font-outfit), var(--font-geist-sans), sans-serif;
   --font-sans: var(--font-jakarta), var(--font-geist-sans), sans-serif;
@@ -42,13 +53,13 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(0, 0%, 2%);
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
   background: rgba(220, 38, 38, 0.2);
   border-radius: 9999px;
-  border: 2px solid hsl(0, 0%, 2%);
+  border: 2px solid var(--background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -57,10 +68,11 @@
 
 /* Global resets */
 body {
-  background-color: hsl(0, 0%, 2%);
-  color: hsl(0, 0%, 88%);
+  background-color: var(--background);
+  color: var(--text-body);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 /* Glassmorphism Red-themed */
@@ -107,3 +119,59 @@ body {
 .animate-float {
   animation: float infinite linear;
 }
+
+/* Light Mode Specific Overrides */
+.light-theme {
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(220, 38, 38, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .text-white {
+    color: hsl(220, 30%, 10%) !important;
+  }
+
+  .text-zinc-300, .text-zinc-400 {
+    color: hsl(220, 15%, 35%) !important;
+  }
+
+  .bg-gradient-to-r .text-white, .bg-velvet-rose .text-white, .bg-green-600 .text-white, .bg-red-600 .text-white, .text-white.bg-velvet-rose {
+    color: #ffffff !important;
+  }
+
+  .bg-black\/45 {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: hsl(220, 30%, 10%) !important;
+  }
+  
+  .bg-white\/5 {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.08) !important;
+  }
+  
+  .bg-white\/2 {
+    background-color: rgba(0, 0, 0, 0.02) !important;
+  }
+  
+  .border-white\/10 {
+    border-color: rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .border-white\/5 {
+    border-color: rgba(0, 0, 0, 0.05) !important;
+  }
+  
+  input, textarea, select {
+    color: hsl(220, 30%, 10%) !important;
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    border-color: rgba(0, 0, 0, 0.12) !important;
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: hsl(220, 15%, 55%) !important;
+  }
+}
+

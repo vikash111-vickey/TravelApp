@@ -96,6 +96,18 @@ export default function BookingView({
       isOffline ? 'filter saturate-75 opacity-90' : ''
     }`}>
       
+      {/* Online/Offline capability indicator badge */}
+      <div className="flex items-center justify-between flex-wrap gap-4 border-b border-white/5 pb-2 select-none text-left">
+        <div>
+          <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-full font-mono uppercase font-bold tracking-wide">
+            🟠 Requires Internet
+          </span>
+          <span className="text-[10px] text-text-muted ml-3 leading-relaxed">
+            Real-time payment authorization, synced vouchers, and tickets integration require network gateways.
+          </span>
+        </div>
+      </div>
+      
       {/* Title */}
       <div>
         <span className="text-xs text-saffron-radiance font-semibold uppercase tracking-wider flex items-center gap-1">
@@ -111,7 +123,7 @@ export default function BookingView({
           <div className="text-xs">
             <span className="font-bold text-white">Offline Mode Active:</span>
             <p className="text-text-muted mt-1 leading-relaxed">
-              GOBRO is operating in offline mode. Bookings will be queued in local database caches and automatically synchronized when your internet connection is restored.
+              WanderLens is operating in offline mode. Bookings will be queued in local database caches and automatically synchronized when your internet connection is restored.
             </p>
           </div>
         </div>

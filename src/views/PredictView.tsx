@@ -11,9 +11,75 @@ import GlassCard from '../components/GlassCard';
 interface PredictViewProps {
   selectedDest: Destination | null;
   setSelectedDest: (dest: Destination) => void;
+  userLocation?: {
+    lat: number;
+    lng: number;
+    city: string;
+    accuracy: number;
+    status: 'enabled' | 'denied' | 'prompt' | 'fetching';
+  } | null;
 }
 
-export default function PredictView({ selectedDest, setSelectedDest }: PredictViewProps) {
+interface WeatherDay {
+  dayName: string;
+  tempMin: number;
+  tempMax: number;
+  rainProb: number;
+  condition: 'Sunny' | 'Rainy' | 'Cloudy' | 'Windy';
+  icon: string;
+}
+
+// Weather data generator helper
+const generateWeatherData = (destName: string): WeatherDay[] => {
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  let hash = 0;
+  for (let i = 0; i < destName.length; i++) {
+    hash = destName.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  hash = Math.abs(hash);
+
+  return daysOfWeek.map((day, idx) => {
+    const seed = hash + idx;
+    const tempMin = 14 + (seed % 9); // 14 - 22
+    const tempMax = tempMin + 6 + (seed % 7); // 20 - 35
+    const rainProb = (seed % 6) * 20; // 0%, 20%, 40%, 60%, 80%, 100%
+    const conditions: Array<'Sunny' | 'Rainy' | 'Cloudy' | 'Windy'> = ['Sunny', 'Cloudy', 'Rainy', 'Windy'];
+    const condition = rainProb > 50 ? 'Rainy' : conditions[seed % conditions.length];
+    const icons = {
+      Sunny: '☀️',
+      Cloudy: '☁️',
+      Rainy: '🌧️',
+      Windy: '💨'
+    };
+
+    return {
+      dayName: day,
+      tempMin,
+      tempMax,
+      rainProb,
+      condition,
+      icon: icons[condition]
+    };
+  });
+};
+
+const calculateComfortScore = (weather: WeatherDay[]) => {
+  let scoreSum = 0;
+  weather.forEach(day => {
+    let dayScore = 10;
+    dayScore -= (day.rainProb / 100) * 4;
+    if (day.tempMax > 30) {
+      dayScore -= (day.tempMax - 30) * 0.3;
+    }
+    if (day.tempMin < 18) {
+      dayScore -= (18 - day.tempMin) * 0.3;
+    }
+    scoreSum += Math.max(1, Math.min(10, dayScore));
+  });
+  return (scoreSum / weather.length).toFixed(1);
+};
+
+export default function PredictView({ selectedDest, setSelectedDest, userLocation }: PredictViewProps) {
   const [activeDest, setActiveDest] = useState<Destination>(selectedDest || constructDynamicDestination('Bengaluru'));
   const [days, setDays] = useState(3);
   const [guests, setGuests] = useState(2);
@@ -28,6 +94,19 @@ export default function PredictView({ selectedDest, setSelectedDest }: PredictVi
   useEffect(() => {
     if (selectedDest) {
       setActiveDest(selectedDest);
+    } else {
+      const cached = localStorage.getItem('gobro_last_selected_dest');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.name) {
+            const fullDest = constructDynamicDestination(parsed.name);
+            setActiveDest(fullDest);
+          }
+        } catch (e) {
+          console.error('Failed to parse cached destination in predict view:', e);
+        }
+      }
     }
   }, [selectedDest]);
 
@@ -59,6 +138,31 @@ export default function PredictView({ selectedDest, setSelectedDest }: PredictVi
     return () => clearTimeout(timer);
   }, [activeDest, days, guests, budgetTier]);
 
+  const getCardinalCoords = (lat: number, lng: number) => {
+    const latVal = Math.abs(lat).toFixed(4);
+    const latDir = lat >= 0 ? 'N' : 'S';
+    const lngVal = Math.abs(lng).toFixed(4);
+    const lngDir = lng >= 0 ? 'E' : 'W';
+    return `${latVal}° ${latDir}, ${lngVal}° ${lngDir}`;
+  };
+
+  const isAtUserLocation = !!(userLocation && 
+    userLocation.status === 'enabled' && 
+    (activeDest.name.toLowerCase() === userLocation.city.toLowerCase() || 
+     activeDest.name.toLowerCase() === 'my location' ||
+     activeDest.name.toLowerCase() === 'current location'));
+
+  const activeLat = isAtUserLocation ? userLocation.lat : activeDest.coordinates?.lat;
+  const activeLng = isAtUserLocation ? userLocation.lng : activeDest.coordinates?.lng;
+
+  const formattedTelemetryCoords = activeLat !== undefined && activeLng !== undefined 
+    ? getCardinalCoords(activeLat, activeLng)
+    : '0.0000° N, 0.0000° E';
+
+  const weatherForecastName = isAtUserLocation && userLocation?.city ? userLocation.city : activeDest.name;
+  const weatherForecast = generateWeatherData(weatherForecastName);
+  const comfortScore = calculateComfortScore(weatherForecast);
+
   // Find optimal day (lowest crowd density)
   const optimalDay = crowdForecast.reduce((lowest, current) => {
     if (!lowest) return current;
@@ -85,7 +189,10 @@ export default function PredictView({ selectedDest, setSelectedDest }: PredictVi
         <div className="space-y-1">
           <span className="block text-[10px] font-bold uppercase tracking-wider text-text-muted font-mono">Active Coordinate Telemetry</span>
           <span className="block text-xs font-bold text-white bg-white/5 border border-white/10 px-4.5 py-2.5 rounded-xl flex items-center gap-1.5 shadow-md">
-            📍 {activeDest.name}
+            📍 {isAtUserLocation && userLocation?.city ? userLocation.city : activeDest.name}
+            <span className="text-text-muted font-mono ml-2 text-[10px] bg-white/5 px-2 py-0.5 rounded border border-white/5">
+              {formattedTelemetryCoords}
+            </span>
           </span>
         </div>
       </div>
@@ -221,6 +328,35 @@ export default function PredictView({ selectedDest, setSelectedDest }: PredictVi
               <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-saffron-radiance"></span> High Density</span>
               <span className="flex items-center gap-1"><span className="h-2 w-2 rounded bg-velvet-rose/50"></span> Optimal Load</span>
             </div>
+          </GlassCard>
+
+          {/* 7-Day Weather & Comfort Forecast */}
+          <GlassCard hoverEffect={false} className="space-y-4 text-left">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <Calendar className="h-4.5 w-4.5 text-saffron-radiance" />
+                7-Day Weather Forecast
+              </h3>
+              <span className="bg-gradient-to-r from-velvet-rose to-saffron-radiance text-white px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-md select-none">
+                Comfort Score: {comfortScore}/10
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 pt-2">
+              {weatherForecast.map((w, idx) => (
+                <div key={idx} className="bg-white/3 border border-white/5 rounded-2xl p-2.5 flex flex-col items-center justify-center text-center">
+                  <span className="text-[10px] text-text-muted font-semibold">{w.dayName.substring(0, 3)}</span>
+                  <span className="text-2xl my-1.5 select-none">{w.icon}</span>
+                  <span className="text-xs font-bold text-white font-mono">{w.tempMin}°-{w.tempMax}°C</span>
+                  <span className="text-[9px] text-blue-400 font-mono mt-1">☔ {w.rainProb}%</span>
+                  <span className="text-[8px] text-text-muted mt-0.5">{w.condition}</span>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-[10px] text-text-muted leading-relaxed font-medium">
+              💡 Comfort Score is computed dynamically. Values between 8.0 and 10.0 represent excellent conditions for sightseeing and trekking.
+            </p>
           </GlassCard>
 
           {/* Budget Regression Forecast */}

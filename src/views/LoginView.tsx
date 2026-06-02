@@ -25,13 +25,20 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
   // Initialize Firebase client on mount
   useEffect(() => {
     const setupFirebase = async () => {
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Timeout establishing Firebase CDN connection")), 5000)
+      );
+
       try {
-        const { auth, db } = await initFirebaseClient();
+        const { auth, db } = await Promise.race([
+          initFirebaseClient(),
+          timeoutPromise
+        ]) as any;
         setFirebaseAuth(auth);
         setFirebaseDb(db);
         setIsFirebaseLoaded(true);
       } catch (err) {
-        console.warn("Could not load Firebase. Falling back to local offline-only user database.");
+        console.warn("Could not load Firebase. Falling back to local offline-only user database:", err);
         setFirebaseAuth(mockAuth);
         setFirebaseDb(mockDb);
         setIsFirebaseLoaded(false);
@@ -151,8 +158,12 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
             createdAt: new Date().toISOString()
           }, { merge: true });
         }
-      } catch (dbErr) {
-        console.error("Failed to seed Google user profile:", dbErr);
+      } catch (dbErr: any) {
+        if (dbErr?.message?.includes('offline') || dbErr?.code === 'unavailable') {
+          console.log("Firestore offline, Google profile seeding queued locally.");
+        } else {
+          console.error("Failed to seed Google user profile:", dbErr);
+        }
       }
       
       onLoginSuccess(user, activeAuth, activeDb);

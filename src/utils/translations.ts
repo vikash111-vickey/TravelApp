@@ -4,7 +4,7 @@ export type LanguageCode = 'EN' | 'HI' | 'KN';
 
 export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   EN: {
-    exploreSmarter: "Explore Smarter with GOBRO AI",
+    exploreSmarter: "Explore Smarter with WanderLens AI",
     brandDescription: "An offline-first, conversational travel platform powered by client-side neural calculations. Plan custom itineraries, predict crowds, and book local stays securely.",
     targetArea: "Target Area",
     travelDate: "Travel Date",
@@ -13,7 +13,7 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     trendingDestinations: "Trending Destinations",
     domestic: "Domestic",
     international: "International",
-    gobroCatalog: "GOBRO Catalog",
+    gobroCatalog: "WanderLens Catalog",
     findEscapesPlaceholder: "Varanasi, Munnar, Tokyo, Bali...",
     guestCount: "Guests",
     sustainability: "Eco",
@@ -64,7 +64,7 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     purgedSuccess: "IndexedDB caches purged successfully!"
   },
   HI: {
-    exploreSmarter: "GOBRO AI के साथ स्मार्ट यात्रा करें",
+    exploreSmarter: "WanderLens AI के साथ स्मार्ट यात्रा करें",
     brandDescription: "एक ऑफ़लाइन-प्रथम, संवादात्मक यात्रा मंच जो क्लाइंट-साइड तंत्रिका गणनाओं द्वारा संचालित है। कस्टम यात्रा कार्यक्रम की योजना बनाएं, भीड़ का अनुमान लगाएं और स्थानीय प्रवास सुरक्षित रूप से बुक करें।",
     targetArea: "लक्ष्य क्षेत्र",
     travelDate: "यात्रा की तिथि",
@@ -73,7 +73,7 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     trendingDestinations: "लोकप्रिय गंतव्य",
     domestic: "घरेलू",
     international: "अंतरराष्ट्रीय",
-    gobroCatalog: "गोब्रो कैटलॉग",
+    gobroCatalog: "वान्डरलेंस कैटलॉग",
     findEscapesPlaceholder: "वाराणसी, मुन्नार, टोक्यो, बाली...",
     guestCount: "अतिथि",
     sustainability: "पर्यावरण",
@@ -124,8 +124,8 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     purgedSuccess: "IndexedDB कैश सफलतापूर्वक साफ़ हो गए!"
   },
   KN: {
-    exploreSmarter: "GOBRO AI ನೊಂದಿಗೆ ಸ್ಮಾರ್ಟ್ ಆಗಿ ಪ್ರಯಾಣಿಸಿ",
-    brandDescription: "ಕ್ಲೈಂಟ್-ಸೈಡ್ ನ್ಯೂರಲ್ ಲೆಕ್ಕಾಚಾರಗಳಿಂದ ಚಾಲಿತವಾಗಿರುವ ಆಫ್‌ಲೈನ್-ಮೊದಲ, ಸಂಭಾಷಣಾ ಪ್ರಯಾಣ ವೇದಿಕೆ. ಕಸ್ಟಮ್ ಪ್ರಯಾಣದ ವಿವರಗಳನ್ನು ಯೋಜಿಸಿ, ಜನಸंदಣಿಯನ್ನು ಮುನ್ಸೂಚಿಸಿ ಮತ್ತು ತಂಗುವಿಕೆಗಳನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಕಾಯ್ದಿರಿಸಿ.",
+    exploreSmarter: "WanderLens AI ನೊಂದಿಗೆ ಸ್ಮಾರ್ಟ್ ಆಗಿ ಪ್ರಯಾಣಿಸಿ",
+    brandDescription: "ಕ್ಲೈಂಟ್-ಸೈಡ್ ನ್ಯೂರಲ್ ಲೆಕ್ಕಾಚಾರಗಳಿಂದ ಚಾಲಿತವಾಗಿರುವ ಆಫ್‌ಲೈನ್-ಮೊದಲ, ಸಂಭಾಷಣಾ ಪ್ರಯಾಣ ವೇದಿಕೆ. ಕಸ್ಟಮ್ ಪ್ರಯಾಣದ ವಿವರಗಳನ್ನು ಯೋಜಿಸಿ, ಜನಸಂದಣಿಯನ್ನು ಮುನ್ಸೂಚಿಸಿ ಮತ್ತು ತಂಗುವಿಕೆಗಳನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ಕಾಯ್ದಿರಿಸಿ.",
     targetArea: "ಪ್ರಯಾಣದ ಸ್ಥಳ",
     travelDate: "ಪ್ರಯಾಣದ ದಿನಾಂಕ",
     travelers: "ಪ್ರಯಾಣಿಕರು",
@@ -133,7 +133,7 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
     trendingDestinations: "ಜನಪ್ರಿಯ ಸ್ಥಳಗಳು",
     domestic: "ದೇಶೀಯ",
     international: "ಅಂತರರಾಷ್ಟ್ರೀಯ",
-    gobroCatalog: "ಗೋಬ್ರೋ ಕ್ಯಾಟಲಾಗ್",
+    gobroCatalog: "ವಾಂಡರ್‌ಲೆನ್ಸ್ ಕ್ಯಾಟಲಾಗ್",
     findEscapesPlaceholder: "ವಾರಣಾಸಿ, ಮುನ್ನಾರ್, ಟೋಕಿಯೋ, ಬಾಲಿ...",
     guestCount: "ಅತಿಥಿಗಳು",
     sustainability: "ಪರಿಸರ",

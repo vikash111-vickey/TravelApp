@@ -15,14 +15,17 @@ const iconMap: Record<string, React.ComponentType<any>> = {
 interface QuizViewProps {
   setActiveView: (view: string) => void;
   setUserArchetype: (archetype: string) => void;
+  user: any;
+  dbObj: any;
+  onProfileSync?: () => void;
 }
 
-export default function QuizView({ setActiveView, setUserArchetype }: QuizViewProps) {
+export default function QuizView({ setActiveView, setUserArchetype, user, dbObj, onProfileSync }: QuizViewProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [result, setResult] = useState<Archetype | null>(null);
 
-  const handleSelectOption = (archetype: string) => {
+  const handleSelectOption = async (archetype: string) => {
     const nextAnswers = [...answers, archetype];
     setAnswers(nextAnswers);
 
@@ -45,6 +48,23 @@ export default function QuizView({ setActiveView, setUserArchetype }: QuizViewPr
       const chosen = ARCHETYPES[winningArchetype];
       setResult(chosen);
       setUserArchetype(winningArchetype);
+
+      // Persist results to Firestore / Mock Database
+      if (dbObj && user) {
+        try {
+          await dbObj.collection('users').doc(user.uid).set({
+            persona: winningArchetype
+          }, { merge: true });
+          
+          // Also set in localStorage for quick load
+          localStorage.setItem(`gobro_${user.uid}_user_persona`, winningArchetype);
+          if (onProfileSync) onProfileSync();
+        } catch (e) {
+          console.error("Failed to persist quiz archetype results:", e);
+        }
+      } else {
+        if (onProfileSync) onProfileSync();
+      }
 
       // Trigger Celebration Confetti
       confetti({

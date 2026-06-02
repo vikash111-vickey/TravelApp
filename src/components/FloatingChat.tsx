@@ -30,7 +30,7 @@ export default function FloatingChat({ isOffline = false, lang = 'EN' }: Floatin
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
-      text: "Hey there, fellow traveler! 👋 I'm your GOBRO buddy. Where are we heading next? Tell me, and let's craft an awesome plan together!",
+      text: "Hey there, fellow traveler! 👋 I'm your WanderLens companion. Where are we heading next? Tell me, and let's craft an awesome plan together!",
       sender: 'assistant',
       timestamp: new Date()
     }
@@ -232,7 +232,7 @@ export default function FloatingChat({ isOffline = false, lang = 'EN' }: Floatin
       }
       // 8. Help / Capabilities
       else if (query.includes('help') || query.includes('what can you do') || query.includes('features')) {
-        replyText = "I'm your GOBRO Buddy travel companion! 🌍 Since I run offline-first, I use client-side model parameters to help you with:";
+        replyText = "I'm your WanderLens Buddy travel companion! 🌍 Since I run offline-first, I use client-side model parameters to help you with:";
         details = {
           type: 'rec',
           title: 'My Interactive Features',
@@ -317,7 +317,7 @@ export default function FloatingChat({ isOffline = false, lang = 'EN' }: Floatin
       {/* Floating Trigger Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-velvet-rose to-saffron-radiance text-white shadow-2xl hover:scale-105 active:scale-95 transition-transform animate-pulse-glow"
+        className="fixed bottom-20 md:bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-velvet-rose to-saffron-radiance text-white shadow-2xl hover:scale-105 active:scale-95 transition-transform animate-pulse-glow"
         whileHover={{ rotate: 10 }}
       >
         <MessageSquare className="h-6 w-6" />
@@ -334,7 +334,7 @@ export default function FloatingChat({ isOffline = false, lang = 'EN' }: Floatin
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className="fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[520px] rounded-3xl border border-white/10 bg-midnight-obsidian/95 shadow-2xl flex flex-col backdrop-blur-2xl overflow-hidden"
+            className="fixed bottom-36 md:bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[480px] md:h-[520px] max-h-[calc(100vh-11rem)] rounded-3xl border border-white/10 bg-midnight-obsidian/95 shadow-2xl flex flex-col backdrop-blur-2xl overflow-hidden"
           >
             {/* Header */}
             <div className="bg-white/5 px-5 py-4 border-b border-white/10 flex items-center justify-between">
@@ -344,7 +344,7 @@ export default function FloatingChat({ isOffline = false, lang = 'EN' }: Floatin
                 </div>
                 <div>
                   <h4 className="text-sm font-semibold text-white flex items-center gap-1">
-                    GOBRO Buddy <Heart className="h-3 w-3 text-red-500 fill-red-500 animate-pulse" />
+                    WanderLens Buddy <Heart className="h-3 w-3 text-red-500 fill-red-500 animate-pulse" />
                   </h4>
                   <span className={`text-[10px] flex items-center gap-1 ${isOffline ? 'text-yellow-400' : 'text-green-400'}`}>
                     <span className={`h-1.5 w-1.5 rounded-full ${isOffline ? 'bg-yellow-400' : 'bg-green-400 animate-pulse'}`}></span>

@@ -99,9 +99,9 @@ export const constructDynamicDestination = (name: string): EnhancedDestination =
       { id: `${id}-mon3`, name: selectedMonuments[2], desc: 'Deep ancestral site with guided walking tours and plaque logs.', rating: 4.5 }
     ],
     hotels: [
-      { id: `${id}-hot1`, name: `${name} ${staysList[seed % 4].name}`, price: staysList[seed % 4].price, rating: staysList[seed % 4].rating, provider: 'Booking.com', imageUrl: staysList[seed % 4].img },
-      { id: `${id}-hot2`, name: `${name} ${staysList[(seed + 1) % 4].name}`, price: staysList[(seed + 1) % 4].price, rating: staysList[(seed + 1) % 4].rating, provider: 'MakeMyTrip', imageUrl: staysList[(seed + 1) % 4].img },
-      { id: `${id}-hot3`, name: `${name} ${staysList[(seed + 2) % 4].name}`, price: staysList[(seed + 2) % 4].price, rating: staysList[(seed + 2) % 4].rating, provider: 'Airbnb', imageUrl: staysList[(seed + 2) % 4].img }
+      { id: `${id}-hot1`, name: `${name} Backpackers Sanctuary`, price: 1100 + (seed % 8) * 100, rating: 4.2 + (seed % 6) * 0.1, provider: 'Booking.com', imageUrl: staysList[1].img },
+      { id: `${id}-hot2`, name: `${name} Riverside Residency`, price: 3200 + (seed % 20) * 100, rating: 4.4 + (seed % 5) * 0.1, provider: 'MakeMyTrip', imageUrl: staysList[2].img },
+      { id: `${id}-hot3`, name: `${name} Grand Regency Palace`, price: 7800 + (seed % 40) * 100, rating: 4.7 + (seed % 3) * 0.1, provider: 'Airbnb', imageUrl: staysList[0].img }
     ],
     flights: [
       { id: `${id}-fl1`, airline: 'IndiGo Connections', price: 5400, duration: '2h 15m', provider: 'MakeMyTrip' }
