@@ -92,6 +92,7 @@ export default function OnboardingView({ user, dbObj, onComplete }: OnboardingVi
       // 3. Cache values locally for instant offline loading
       if (user) {
         localStorage.setItem(`gobro_${user.uid}_user_name`, displayName.trim());
+        localStorage.setItem(`gobro_${user.uid}_user_photo`, avatar);
         localStorage.setItem(`gobro_${user.uid}_user_persona`, persona);
         localStorage.setItem(`gobro_${user.uid}_favorite_destinations`, JSON.stringify(selectedDests));
       }

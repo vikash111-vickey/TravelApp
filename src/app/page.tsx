@@ -378,35 +378,9 @@ export default function Page() {
     const email = currentUser.email || '';
     const emailPrefix = email ? email.split('@')[0] : 'explorer';
     
-    let displayName = currentUser.displayName || '';
-    let photoURL = currentUser.photoURL || '';
-    
-    // Always check firestore profile to prevent placeholders
-    if (db && !currentUser.isGuest) {
-      try {
-        const snap = await db.collection('users').doc(uid).get();
-        if (snap.exists) {
-          const data = snap.data();
-          if (data) {
-            if (data.name) displayName = data.name;
-            if (data.photoURL) photoURL = data.photoURL;
-          }
-        }
-      } catch (err: any) {
-        if (err?.message?.includes('offline') || err?.code === 'unavailable') {
-          console.log("Firestore offline, profile sync skipped (will resume when online).");
-        } else {
-          console.warn("Error fetching profile from Firestore during sync:", err);
-        }
-      }
-    }
-    
-    if (!displayName) {
-      displayName = localStorage.getItem(`gobro_${uid}_user_name`) || '';
-    }
-    if (!photoURL) {
-      photoURL = localStorage.getItem(`gobro_${uid}_user_photo`) || '';
-    }
+    // Set immediate synchronous fallback/cached state first to prevent blank/missing profile UI
+    let displayName = currentUser.displayName || localStorage.getItem(`gobro_${uid}_user_name`) || '';
+    let photoURL = currentUser.photoURL || localStorage.getItem(`gobro_${uid}_user_photo`) || '';
     
     if (!displayName) {
       displayName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
@@ -418,6 +392,42 @@ export default function Page() {
     setProfile({ displayName, email, photoURL });
     localStorage.setItem(`gobro_${uid}_user_name`, displayName);
     localStorage.setItem(`gobro_${uid}_user_photo`, photoURL);
+
+    // Now, asynchronously check Firestore for database overrides if connected
+    if (db && !currentUser.isGuest) {
+      try {
+        const snap = await db.collection('users').doc(uid).get();
+        if (snap.exists) {
+          const data = snap.data();
+          if (data) {
+            let updated = false;
+            let finalName = displayName;
+            let finalPhoto = photoURL;
+            
+            if (data.name && data.name !== displayName) {
+              finalName = data.name;
+              updated = true;
+            }
+            if (data.photoURL && data.photoURL !== photoURL) {
+              finalPhoto = data.photoURL;
+              updated = true;
+            }
+            
+            if (updated) {
+              setProfile({ displayName: finalName, email, photoURL: finalPhoto });
+              localStorage.setItem(`gobro_${uid}_user_name`, finalName);
+              localStorage.setItem(`gobro_${uid}_user_photo`, finalPhoto);
+            }
+          }
+        }
+      } catch (err: any) {
+        if (err?.message?.includes('offline') || err?.code === 'unavailable') {
+          console.log("Firestore offline, profile sync skipped (will resume when online).");
+        } else {
+          console.warn("Error fetching profile from Firestore during sync:", err);
+        }
+      }
+    }
   };
 
 

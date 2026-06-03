@@ -98,8 +98,8 @@ export default function ProfileView({
   // Synchronize with parent state
   useEffect(() => {
     if (profile) {
-      setUsername(profile.displayName);
-      setUserPhoto(profile.photoURL);
+      if (profile.displayName) setUsername(profile.displayName);
+      if (profile.photoURL) setUserPhoto(profile.photoURL);
     }
   }, [profile]);
 
@@ -200,38 +200,38 @@ export default function ProfileView({
             const cloud = snap.data();
             if (cloud) {
               const cloudUid = user.uid;
-              if (cloud.name) setUsername(cloud.name);
-              if (cloud.passport) setPassport(cloud.passport);
-              if (cloud.homeCity) setHomeCity(cloud.homeCity);
-              if (cloud.contact) setEmergencyContact(cloud.contact);
-              if (cloud.blood) setBloodGroup(cloud.blood);
-              if (cloud.bio) setBio(cloud.bio);
-              if (cloud.preferences) setPreferences(cloud.preferences);
+              setUsername(cloud.name || username || 'Alex Mercer');
+              setPassport(cloud.passport || 'Not Provided');
+              setHomeCity(cloud.homeCity || 'Not Provided');
+              setEmergencyContact(cloud.contact || 'Not Provided');
+              setBloodGroup(cloud.blood || 'O+');
+              setBio(cloud.bio || '');
+              setPreferences(cloud.preferences || '');
               if (cloud.photoURL) setUserPhoto(cloud.photoURL);
 
-              if (cloud.family1Name) setFamily1Name(cloud.family1Name);
-              if (cloud.family1Relation) setFamily1Relation(cloud.family1Relation);
-              if (cloud.family1Phone) setFamily1Phone(cloud.family1Phone);
+              setFamily1Name(cloud.family1Name || '');
+              setFamily1Relation(cloud.family1Relation || '');
+              setFamily1Phone(cloud.family1Phone || '');
               
-              if (cloud.family2Name) setFamily2Name(cloud.family2Name);
-              if (cloud.family2Relation) setFamily2Relation(cloud.family2Relation);
-              if (cloud.family2Phone) setFamily2Phone(cloud.family2Phone);
+              setFamily2Name(cloud.family2Name || '');
+              setFamily2Relation(cloud.family2Relation || '');
+              setFamily2Phone(cloud.family2Phone || '');
 
-              if (cloud.friend1Name) setFriend1Name(cloud.friend1Name);
-              if (cloud.friend1Phone) setFriend1Phone(cloud.friend1Phone);
+              setFriend1Name(cloud.friend1Name || '');
+              setFriend1Phone(cloud.friend1Phone || '');
 
-              if (cloud.friend2Name) setFriend2Name(cloud.friend2Name);
-              if (cloud.friend2Phone) setFriend2Phone(cloud.friend2Phone);
+              setFriend2Name(cloud.friend2Name || '');
+              setFriend2Phone(cloud.friend2Phone || '');
 
               // Cache cloud values in local storage for offline continuity (using scoped keys)
-              localStorage.setItem(`gobro_${cloudUid}_user_name`, cloud.name || '');
-              localStorage.setItem(`gobro_${cloudUid}_user_passport`, cloud.passport || '');
-              localStorage.setItem(`gobro_${cloudUid}_user_home`, cloud.homeCity || '');
-              localStorage.setItem(`gobro_${cloudUid}_user_contact`, cloud.contact || '');
-              localStorage.setItem(`gobro_${cloudUid}_user_blood`, cloud.blood || '');
+              localStorage.setItem(`gobro_${cloudUid}_user_name`, cloud.name || username || 'Alex Mercer');
+              localStorage.setItem(`gobro_${cloudUid}_user_passport`, cloud.passport || 'Not Provided');
+              localStorage.setItem(`gobro_${cloudUid}_user_home`, cloud.homeCity || 'Not Provided');
+              localStorage.setItem(`gobro_${cloudUid}_user_contact`, cloud.contact || 'Not Provided');
+              localStorage.setItem(`gobro_${cloudUid}_user_blood`, cloud.blood || 'O+');
               localStorage.setItem(`gobro_${cloudUid}_user_bio`, cloud.bio || '');
               localStorage.setItem(`gobro_${cloudUid}_user_preferences`, cloud.preferences || '');
-              localStorage.setItem(`gobro_${cloudUid}_user_photo`, cloud.photoURL || '');
+              localStorage.setItem(`gobro_${cloudUid}_user_photo`, cloud.photoURL || userPhoto || '');
               localStorage.setItem(`gobro_${cloudUid}_fam1_name`, cloud.family1Name || '');
               localStorage.setItem(`gobro_${cloudUid}_fam1_rel`, cloud.family1Relation || '');
               localStorage.setItem(`gobro_${cloudUid}_fam1_phone`, cloud.family1Phone || '');
