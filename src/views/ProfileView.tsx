@@ -62,6 +62,21 @@ export default function ProfileView({
 }: ProfileViewProps) {
   const { t } = useTranslation(lang as LanguageCode);
 
+  // Safe schema fallbacks for cultural passport details and ancestry compositions
+  const stamps = culturalPassport?.stamps || ['varanasi'];
+  const challenges = culturalPassport?.challenges || {
+    'attend-aarti': false,
+    'try-street-food': false,
+    'speak-3-words': false
+  };
+  const dnaProfile = culturalPassport?.dnaProfile || { spiritual: 40, heritage: 35, nature: 25 };
+  const ancestry = ancestryMix || {
+    'South Indian Dravidian': 35,
+    'Rajput/North Indian': 25,
+    'Goan/Konkan': 20,
+    'Himalayan': 20
+  };
+
   const [username, setUsername] = useState(user?.displayName || user?.email || 'Alex Mercer');
   const [passport, setPassport] = useState(user ? 'Not Provided' : 'Z-9843621');
   const [homeCity, setHomeCity] = useState(user ? 'Not Provided' : 'Bengaluru, India');
@@ -853,7 +868,7 @@ export default function ProfileView({
                       📖 Digital Cultural Passport
                     </h4>
                     <span className="text-[10px] bg-purple-500/10 text-purple-400 border border-purple-500/20 px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider">
-                      Stamps Unlocked: {culturalPassport.stamps.length}
+                      Stamps Unlocked: {stamps.length}
                     </span>
                   </div>
 
@@ -864,14 +879,14 @@ export default function ProfileView({
                       <div className="grid grid-cols-3 gap-3 text-center select-none">
                         {/* Varanasi Stamp */}
                         <div className={`border p-3 rounded-2xl flex flex-col items-center justify-center transition-all ${
-                          culturalPassport.stamps.includes('varanasi')
+                          stamps.includes('varanasi')
                             ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
                             : 'bg-white/2 border-white/5 opacity-30 text-text-muted'
                         }`}>
                           <span className="text-2xl mb-1">🛕</span>
                           <span className="text-[10px] font-bold font-mono">VARANASI</span>
                           <span className="text-[8px] opacity-75 font-mono">Witness of Eternity</span>
-                          {culturalPassport.stamps.includes('varanasi') && (
+                          {stamps.includes('varanasi') && (
                             <span className="text-[8px] mt-1.5 text-zinc-300 bg-black/40 px-1 py-0.5 rounded">
                               ✓ Never point feet to Ganga
                             </span>
@@ -880,14 +895,14 @@ export default function ProfileView({
 
                         {/* Kerala Stamp */}
                         <div className={`border p-3 rounded-2xl flex flex-col items-center justify-center transition-all ${
-                          culturalPassport.stamps.includes('kerala')
+                          stamps.includes('kerala')
                             ? 'bg-green-500/10 border-green-500/30 text-green-300'
                             : 'bg-white/2 border-white/5 opacity-30 text-text-muted'
                         }`}>
                           <span className="text-2xl mb-1">🎭</span>
                           <span className="text-[10px] font-bold font-mono">KERALA</span>
                           <span className="text-[8px] opacity-75 font-mono">Backwater Soul</span>
-                          {culturalPassport.stamps.includes('kerala') && (
+                          {stamps.includes('kerala') && (
                             <span className="text-[8px] mt-1.5 text-zinc-300 bg-black/40 px-1 py-0.5 rounded">
                               ✓ Speak Malayalam phrases
                             </span>
@@ -896,14 +911,14 @@ export default function ProfileView({
 
                         {/* Rajasthan Stamp */}
                         <div className={`border p-3 rounded-2xl flex flex-col items-center justify-center transition-all ${
-                          culturalPassport.stamps.includes('rajasthan')
+                          stamps.includes('rajasthan')
                             ? 'bg-rose-500/10 border-rose-500/30 text-rose-300'
                             : 'bg-white/2 border-white/5 opacity-30 text-text-muted'
                         }`}>
                           <span className="text-2xl mb-1">🏰</span>
                           <span className="text-[10px] font-bold font-mono">RAJASTHAN</span>
                           <span className="text-[8px] opacity-75 font-mono">Desert Dreamer</span>
-                          {culturalPassport.stamps.includes('rajasthan') && (
+                          {stamps.includes('rajasthan') && (
                             <span className="text-[8px] mt-1.5 text-zinc-300 bg-black/40 px-1 py-0.5 rounded">
                               ✓ Turban-tying tutorial
                             </span>
@@ -915,13 +930,13 @@ export default function ProfileView({
                       <div className="pt-4 border-t border-white/5">
                         <span className="text-[10px] text-velvet-rose font-mono font-bold uppercase block mb-3">Cultural Challenges & Missions</span>
                         <div className="space-y-2 text-xs">
-                          {Object.keys(culturalPassport.challenges).map((challenge) => {
+                          {Object.keys(challenges).map((challenge) => {
                             const labels: Record<string, string> = {
                               'attend-aarti': 'Attend morning aarti at Dashashwamedh Ghat in Varanasi',
                               'try-street-food': 'Try one street food flavor you cannot identify',
                               'speak-3-words': 'Speak 3 local words to a shopkeeper native to your area'
                             };
-                            const isDone = culturalPassport.challenges[challenge];
+                            const isDone = challenges[challenge];
                             return (
                               <button
                                 key={challenge}
@@ -991,15 +1006,15 @@ export default function ProfileView({
                         <div className="space-y-1 text-[10px] pt-2 text-left leading-relaxed text-text-muted">
                           <p className="flex justify-between">
                             <span>🧘 Spiritual Seeker:</span>
-                            <span className="text-white font-mono font-bold">{culturalPassport.dnaProfile.spiritual}%</span>
+                            <span className="text-white font-mono font-bold">{dnaProfile.spiritual}%</span>
                           </p>
                           <p className="flex justify-between">
                             <span>🏛️ Heritage Hunter:</span>
-                            <span className="text-white font-mono font-bold">{culturalPassport.dnaProfile.heritage}%</span>
+                            <span className="text-white font-mono font-bold">{dnaProfile.heritage}%</span>
                           </p>
                           <p className="flex justify-between">
                             <span>🌿 Nature Nomad:</span>
-                            <span className="text-white font-mono font-bold">{culturalPassport.dnaProfile.nature}%</span>
+                            <span className="text-white font-mono font-bold">{dnaProfile.nature}%</span>
                           </p>
                         </div>
                       </div>
@@ -1160,20 +1175,20 @@ export default function ProfileView({
                     <div className="md:col-span-2 space-y-4">
                       <span className="text-[10px] text-saffron-radiance font-mono font-bold uppercase block">Genetic Heritage Composition</span>
                       <div className="space-y-3">
-                        {Object.keys(ancestryMix).map((region) => (
+                        {Object.keys(ancestry).map((region) => (
                           <div key={region} className="space-y-1">
                             <div className="flex justify-between text-xs font-semibold text-zinc-300">
                               <span>{region}</span>
-                              <span className="font-mono">{ancestryMix[region]}%</span>
+                              <span className="font-mono">{ancestry[region]}%</span>
                             </div>
                             <input
                               type="range"
                               min={0}
                               max={100}
-                              value={ancestryMix[region]}
+                              value={ancestry[region]}
                               onChange={(e) => {
                                 const val = Number(e.target.value);
-                                const updated = { ...ancestryMix, [region]: val };
+                                const updated = { ...ancestry, [region]: val };
                                 updateAncestry(updated);
                               }}
                               className="w-full h-1 bg-white/10 rounded-lg cursor-pointer accent-velvet-rose"
