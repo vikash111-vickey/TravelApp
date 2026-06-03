@@ -1,15 +1,23 @@
 const CACHE_NAME = 'gobro-v1';
 const ASSETS_TO_CACHE = [
   '/',
-  '/globals.css',
-  '/manifest.json',
   '/favicon.ico'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      return Promise.allSettled(
+        ASSETS_TO_CACHE.map((url) =>
+          fetch(url)
+            .then((response) => {
+              if (response.ok) {
+                return cache.put(url, response);
+              }
+            })
+            .catch((err) => console.warn(`Service Worker failed to cache asset: ${url}`, err))
+        )
+      );
     })
   );
   self.skipWaiting();
