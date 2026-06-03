@@ -39,8 +39,16 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Let network-first be default for data fetching, cache-first for local static media
+  // Only intercept GET requests. Caching non-GET (POST/PUT/etc.) throws TypeError and crashes the SW.
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   const url = new URL(event.request.url);
+  // Only handle http/https requests
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
 
   if (url.origin === location.origin || url.href.includes('unsplash.com')) {
     event.respondWith(
